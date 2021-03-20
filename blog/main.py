@@ -2,10 +2,12 @@ from fastapi import (
     FastAPI, Depends, status, Response,
     HTTPException
 )
-from . import schemas, models
+from passlib.utils.decor import deprecated_method
+from . import schemas, models, hashing
 from .database import SessionLocal, engine
 from sqlalchemy.orm import Session
 from typing import List
+
 
 myapp=FastAPI()
 
@@ -60,9 +62,13 @@ def update(id, request:schemas.Blog, db:Session=Depends(get_db)):
     db.commit()
     return "update" 
 
+
 @myapp.post('/users')
 def create_user(request: schemas.User, db:Session=Depends(get_db)):
-    new_user=models.User(name=request.name, email=request.email, password=request.password)
+   
+    new_user=models.User(name=request.name, 
+                            email=request.email, 
+                            password=hashing.Hash.bcrypt(request.password))
     db.add(new_user)
     db.commit()
     db.refresh(new_user)
