@@ -5,7 +5,7 @@ from fastapi import (
 from . import schemas, models
 from .database import SessionLocal, engine
 from sqlalchemy.orm import Session
-
+from typing import List
 
 myapp=FastAPI()
 
@@ -28,12 +28,12 @@ def create(request: schemas.Blog, db:Session=Depends(get_db)):
     return new_blog 
 
 
-@myapp.get('/blog')
+@myapp.get('/blog', response_model=List[schemas.ShowBlog])
 def all(db:Session=Depends(get_db)):
     blogs=db.query(models.Blog).all()
     return blogs    
 
-@myapp.get('/blog/{id}', status_code=200)
+@myapp.get('/blog/{id}', status_code=200, response_model=schemas.ShowBlog)
 def show(id, db:Session=Depends(get_db)):
     blog=db.query(models.Blog).filter(models.Blog.id==id).first()
     if not blog:
