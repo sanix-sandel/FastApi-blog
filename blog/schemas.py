@@ -14,7 +14,7 @@ class User(BaseModel):
     email:str
     password:str
 
-
+  
 class ShowUser(BaseModel):
     name:str
     email:str    
@@ -31,3 +31,9 @@ class ShowBlog(Blog):
 
     class Config():
         orm_mode=True        
+
+
+
+class Login(BaseModel):
+    username:str
+    password:str        
