@@ -2,7 +2,7 @@ from sqlalchemy.orm import Session
 from .. import models
 from .. import schemas
 from fastapi import (
-    Depends, status, Response,
+    status,
     HTTPException
 )
 
